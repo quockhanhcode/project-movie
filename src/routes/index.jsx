@@ -10,6 +10,7 @@ import NewsPage from "../pages/HomeTemplate/NewsPage";
 import LoginPgae from "../pages/HomeTemplate/LoginPage";
 import RegisterPage from "../pages/HomeTemplate/RegisterPage";
 import AuthPage from "../pages/AdminTemplate/AuthPage";
+import MovieDetailsPage from "../pages/HomeTemplate/MovieDetailsPage";
 const routes = [
   {
     path: "",
@@ -26,6 +27,10 @@ const routes = [
       {
         path: "list-movie",
         element: ListMoviePage,
+      },
+      {
+        path: "movie-detail/:movieId",
+        element: MovieDetailsPage,
       },
       {
         path: "news",
