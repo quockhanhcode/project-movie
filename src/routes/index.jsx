@@ -11,6 +11,7 @@ import LoginPgae from "../pages/HomeTemplate/LoginPage";
 import RegisterPage from "../pages/HomeTemplate/RegisterPage";
 import AuthPage from "../pages/AdminTemplate/AuthPage";
 import MovieDetailsPage from "../pages/HomeTemplate/MovieDetailsPage";
+import MovieManagement from "../pages/AdminTemplate/MovieManagement";
 const routes = [
   {
     path: "",
@@ -57,6 +58,10 @@ const routes = [
       {
         path: "add-user",
         element: AddUser,
+      },
+      {
+        path: "movies-management",
+        element: MovieManagement,
       },
     ],
   },
