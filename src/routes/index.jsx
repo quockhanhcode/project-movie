@@ -12,6 +12,7 @@ import RegisterPage from "../pages/HomeTemplate/RegisterPage";
 import AuthPage from "../pages/AdminTemplate/AuthPage";
 import MovieDetailsPage from "../pages/HomeTemplate/MovieDetailsPage";
 import MovieManagement from "../pages/AdminTemplate/MovieManagement";
+import AddMovie from "../pages/AdminTemplate/AddMovie";
 const routes = [
   {
     path: "",
@@ -62,6 +63,10 @@ const routes = [
       {
         path: "movies-management",
         element: MovieManagement,
+      },
+      {
+        path: "movies-management/add-movie",
+        element: AddMovie,
       },
     ],
   },
