@@ -1,14 +1,40 @@
 import { useForm } from "react-hook-form";
 import api from "../../../services/api";
 import { format } from "date-fns";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const schema = z.object({
+  tenPhim: z.string().nonempty("Vui long nhap thong tin"),
+  trailer: z
+    .string()
+    .nonempty("Vui long nhap thong tin")
+    .regex(
+      /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi,
+      "Vui long nhap dung dinh dang"
+    ),
+  moTa: z
+    .string()
+    .nonempty("Vui long nhap thong tin")
+    .max(100, "Noi dung qua 100 ki tu"),
+  ngayKhoiChieu: z.string().nonempty("Nhap dung dinh dang"),
+  trangThai: z.string().optional(),
+  Hot: z.string().optional(),
+  maNhom: z.string().optional("GP01"),
+  danhGia: z
+    .string()
+    .regex(/^(?:10(?:\.0+)?|(?:\d(?:\.\d+)?))$/gm, "Vui long nhap tu 0-10"),
+  hinhAnh: z.any(),
+});
+
 export default function AddMovie() {
-  const { register, setValue, handleSubmit, watch } = useForm({
+  const { register, setValue, handleSubmit, watch, formState } = useForm({
     defaultValues: {
       tenPhim: "",
       trailer: "",
       moTa: "",
       maNhom: "GP01",
-      ngayKhoiChieu: null,
+      ngayKhoiChieu: "",
       //   SapChieu: false,
       //   DangChieu: "",
       trangThai: false,
@@ -16,7 +42,11 @@ export default function AddMovie() {
       danhGia: "",
       hinhAnh: null,
     },
+    resolver: zodResolver(schema),
   });
+
+  const errors = formState.errors;
+  console.log(errors);
 
   const hinhAnh = watch("hinhAnh");
   //   console.log(hinhAnh);
@@ -24,7 +54,6 @@ export default function AddMovie() {
   const previewImage = (file) => {
     if (!file) return "";
     const url = URL.createObjectURL(file);
-    console.log(url);
     return url;
   };
 
@@ -39,7 +68,6 @@ export default function AddMovie() {
       DangChieu: trangThai === "true",
       Hot: Hot === "true",
     };
-    console.log(newValues);
 
     //   lien quan den file
     const formData = new FormData();
@@ -58,7 +86,7 @@ export default function AddMovie() {
 
     try {
       const response = await api.post(
-        "QuanLyPhim/ThemPhimUploadHinh",
+        "/QuanLyPhim/ThemPhimUploadHinh",
         formData
       );
     } catch (error) {
@@ -152,9 +180,11 @@ export default function AddMovie() {
               type="text"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="John"
-              required
               {...register("tenPhim")}
             />
+            {errors?.tenPhim?.message && (
+              <span className="text-red-700">{errors.tenPhim.message}</span>
+            )}
           </div>
           <div>
             <label
@@ -167,9 +197,11 @@ export default function AddMovie() {
               type="text"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Doe"
-              required
               {...register("moTa")}
             />
+            {errors?.moTa?.message && (
+              <span className="text-red-600">{errors.moTa.message}</span>
+            )}
           </div>
           <div>
             <label
@@ -182,7 +214,6 @@ export default function AddMovie() {
               type="text"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="http:/youtube/xxx/yyyy"
-              required
               {...register("trailer")}
             />
           </div>
@@ -198,7 +229,6 @@ export default function AddMovie() {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="0-10"
               pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
-              required
               {...register("danhGia")}
             />
           </div>
