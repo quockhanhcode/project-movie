@@ -1,32 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
-import { useDispatch, useSelector } from "react-redux";
 import { movieDetail } from "./slice";
+import { useQuery } from "@tanstack/react-query";
+import { getMovieDetailsApi } from "../../../services/movie.api";
 
 export default function MovieDetailsPage() {
-  const dispath = useDispatch();
   const { movieId } = useParams();
-  const { movie } = useSelector((state) => state.movieDetailSlice);
-  // const [movie, setMovie] = useState(null);
-  useEffect(() => {
-    dispath(movieDetail(movieId));
-  }, [movieId]);
 
-  // useEffect(() => {
-  //   const getMovieDetails = async () => {
-  //     try {
-  //       const reponse = await api.get(
-  //         `/QuanLyPhim/LayThongTinPhim?MaPhim=${movieId}`
-  //       );
-  //       setMovie(reponse.data.content);
-  //       console.log(movie);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   getMovieDetails();
-  // }, []);
+  const {
+    data: movie,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["movie-details"],
+    queryFn: () => getMovieDetailsApi(movieId),
+  });
 
   return (
     <div className="max-w-[1280px] mx-auto py-9">
